@@ -1,0 +1,75 @@
+services:
+  db:
+    image: postgres:16
+    container_name: kr-jp-match-db
+    environment:
+      POSTGRES_DB: kr_jp_match
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./010_all_in_one_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./006_seed_sample.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kr_jp_match"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: kr-jp-match-redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./backend
+    container_name: kr-jp-match-api
+    env_file:
+      - ./backend/.env.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build:
+      context: ./backend
+    container_name: kr-jp-match-worker
+    command: python -m app.workers.translation_worker
+    env_file:
+      - ./backend/.env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+
+  recommendation-scheduler:
+    build:
+      context: ./backend
+    container_name: kr-jp-match-recommendation-scheduler
+    command: python -m app.workers.recommendation_scheduler
+    env_file:
+      - ./backend/.env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./frontend
+    container_name: kr-jp-match-web
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
