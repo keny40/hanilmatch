@@ -7,9 +7,9 @@ import { User, getCurrentUser } from "../lib/api";
 import { AppLocale, getBrowserLocale, translate } from "../lib/i18n";
 
 const features = [
-  ["home.point1Title", "home.point1Body", "ID"],
-  ["home.point2Title", "home.point2Body", "TR"],
-  ["home.point3Title", "home.point3Body", "PR"],
+  "home.point1Title",
+  "home.point2Title",
+  "home.point3Title",
 ] as const;
 
 const steps = [
@@ -79,33 +79,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="landing-trust shell">
-        <div className="landing-point-row">
-          {features.map(([titleKey, bodyKey, icon]) => (
-            <article className="landing-point-card" key={titleKey}>
-              <span>{icon}</span>
-              <div>
-                <strong>{translate(locale, titleKey)}</strong>
+      <section className="landing-flow shell">
+        <div className="landing-section-heading">
+          <h2>{translate(locale, "home.flowTitle")}</h2>
+          <p>{translate(locale, "home.flowBody")}</p>
+        </div>
+        <div className="landing-flow-card">
+          <div className="landing-steps">
+            {steps.map(([labelKey, titleKey, bodyKey]) => (
+              <div className="landing-step-card" key={labelKey}>
+                <div className="stat-label">{translate(locale, labelKey)}</div>
+                <div className="stat-value">{translate(locale, titleKey)}</div>
                 <p>{translate(locale, bodyKey)}</p>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="landing-how shell">
-        <div className="landing-section-heading">
-          <span className="eyebrow">{translate(locale, "home.howEyebrow")}</span>
-          <h2>{translate(locale, "home.howTitle")}</h2>
-        </div>
-        <div className="landing-steps">
-          {steps.map(([labelKey, titleKey, bodyKey]) => (
-            <div className="landing-step-card" key={labelKey}>
-              <div className="stat-label">{translate(locale, labelKey)}</div>
-              <div className="stat-value">{translate(locale, titleKey)}</div>
-              <p>{translate(locale, bodyKey)}</p>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="landing-flow-badges" aria-label={translate(locale, "home.flowTrustLabel")}>
+            {features.map((titleKey) => (
+              <span key={titleKey}>{translate(locale, titleKey)}</span>
+            ))}
+          </div>
         </div>
       </section>
 
