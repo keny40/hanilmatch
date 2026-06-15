@@ -22,7 +22,6 @@ const metrics = [
   ["home.metric1Value", "home.metric1Label"],
   ["home.metric2Value", "home.metric2Label"],
   ["home.metric3Value", "home.metric3Label"],
-  ["home.metric4Value", "home.metric4Label"],
 ] as const;
 
 export default function HomePage() {
@@ -70,33 +69,43 @@ export default function HomePage() {
                 </>
               )}
             </div>
-            <div className="landing-point-row">
-              {features.map(([titleKey, bodyKey, icon]) => (
-                <article className="landing-point-card" key={titleKey}>
-                  <span>{icon}</span>
-                  <div>
-                    <strong>{translate(locale, titleKey)}</strong>
-                    <p>{translate(locale, bodyKey)}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
           </div>
           <div className="landing-hero-side">
             <div className="landing-visual-card">
               <img src="/brand/hanilmatch-hero.png" alt="Korean and Japanese cultural connection image" />
               <div className="landing-visual-badge">{translate(locale, "home.visualBadge")}</div>
             </div>
-            <div className="landing-steps">
-              {steps.map(([labelKey, titleKey, bodyKey]) => (
-                <div className="landing-step-card" key={labelKey}>
-                  <div className="stat-label">{translate(locale, labelKey)}</div>
-                  <div className="stat-value">{translate(locale, titleKey)}</div>
-                  <p>{translate(locale, bodyKey)}</p>
-                </div>
-              ))}
-            </div>
           </div>
+        </div>
+      </section>
+
+      <section className="landing-trust shell">
+        <div className="landing-point-row">
+          {features.map(([titleKey, bodyKey, icon]) => (
+            <article className="landing-point-card" key={titleKey}>
+              <span>{icon}</span>
+              <div>
+                <strong>{translate(locale, titleKey)}</strong>
+                <p>{translate(locale, bodyKey)}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="landing-how shell">
+        <div className="landing-section-heading">
+          <span className="eyebrow">{translate(locale, "home.howEyebrow")}</span>
+          <h2>{translate(locale, "home.howTitle")}</h2>
+        </div>
+        <div className="landing-steps">
+          {steps.map(([labelKey, titleKey, bodyKey]) => (
+            <div className="landing-step-card" key={labelKey}>
+              <div className="stat-label">{translate(locale, labelKey)}</div>
+              <div className="stat-value">{translate(locale, titleKey)}</div>
+              <p>{translate(locale, bodyKey)}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -109,6 +118,7 @@ export default function HomePage() {
             </article>
           ))}
         </div>
+        <p className="landing-service-note">{translate(locale, "home.serviceNote")}</p>
       </section>
     </main>
   );
